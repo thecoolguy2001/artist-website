@@ -130,12 +130,13 @@ permalink: /catalog/2
       width: 30%; /* Adjust the width as necessary */
       margin-right: 5%; /* Adjust the margin to position the text */
       color: #FFFFFF;
-      text-align: center; /* Center-align text and inline elements */
+      text-align: center;
       position: relative;
       right: 75px;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Center items horizontally */
+      align-items: center;
+      gap: 1.1rem;
 
       /* iOS 26 Liquid Glass panel */
       box-sizing: border-box;
@@ -157,7 +158,7 @@ permalink: /catalog/2
     .art-title {
       font-size: clamp(1.5rem, 3.2vw, 2.4rem);
       line-height: 1.1;
-      margin-bottom: 0.3em;
+      margin: 0;
       font-weight: bold;
       overflow-wrap: break-word;
       word-break: break-word;
@@ -169,13 +170,12 @@ permalink: /catalog/2
     .art-details p {
       margin: 0;
       font-size: 1.2em;
-      margin-bottom: 0.2em;
     }
 
     /* Style for additional description if needed */
     .art-description p {
+      margin: 0;
       font-size: 1.5em;
-      margin-top: 2em;
     }
      /* Tooltip Styles */
 .tooltip {
@@ -385,7 +385,7 @@ permalink: /catalog/2
     .painting-actions {
       display: flex;
       gap: 0.7rem;
-      margin-top: 1.5rem;
+      margin: 0.4rem 0 0;
       width: 100%;
       justify-content: flex-start;
     }
