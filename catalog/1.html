@@ -50,22 +50,48 @@ permalink: /catalog/1
 
     .navigation-bar {
       position: fixed;
-      top: 0;
-      right: 0;
+      top: 16px;
+      right: 16px;
       z-index: 2;
-      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 6px;
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 10px 32px rgba(0, 0, 0, 0.32),
+        0 2px 6px rgba(0, 0, 0, 0.16);
     }
 
     .navigation-bar a {
-      margin: 0 10px;
+      margin: 0;
+      padding: 8px 16px;
+      border-radius: 999px;
       text-decoration: none;
-      color: white;
-      transition: text-decoration 0.3s;
+      color: #fff;
+      font-size: 0.95em;
+      font-family: 'Staatliches', sans-serif;
+      letter-spacing: 0.04em;
       cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .navigation-bar a:hover {
-      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.14);
+      text-decoration: none;
+    }
+
+    .navigation-bar a.active {
+      background-color: rgba(255, 255, 255, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      text-decoration: none;
     }
 
     /* Logo Container */
@@ -118,11 +144,26 @@ permalink: /catalog/1
       margin-right: 5%; /* Adjust the margin to position the text */
       color: #FFFFFF;
       text-align: center; /* Center-align text and inline elements */
-      position: relative; /* Positioning context for Buy Button */
+      position: relative;
       right: 75px;
       display: flex;
       flex-direction: column;
       align-items: center; /* Center items horizontally */
+
+      /* iOS 26 Liquid Glass panel */
+      box-sizing: border-box;
+      padding: 2.25rem 2.25rem 2.5rem;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 18px 48px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     /* Style for the title */
@@ -144,47 +185,6 @@ permalink: /catalog/1
       font-size: 1.5em;
       margin-top: 2em;
     }
-
-    /* Shopify Buy Button Styles */
-    #product-component-1733947408877 {
-      display: flex;
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-      min-height: 80px; /* Reserve more space to prevent layout shifts */
-      margin-top: 20px; /* Space between art description and Buy Button */
-      opacity: 0; /* Initially hidden */
-      transition: opacity 0.5s ease-in-out; /* Smooth fade-in */
-      width: 100%; /* Take full width of the container */
-    }
-
-    #product-component-1733947408877.loaded {
-      opacity: 1; /* Fade in when loaded */
-    }
-
-    /* Override Shopify Buy Button's default styles */
-    #product-component-1733947408877 .shopify-buy__btn {
-      margin: 0; /* Remove default margins */
-      padding: 10px 0; /* Minimal vertical padding */
-      display: flex; /* Use Flexbox to center content */
-      align-items: center; /* Center vertically */
-      justify-content: center; /* Center horizontally */
-      text-align: center; /* Ensure text is centered */
-      background-color: #4CAF50 !important; /* Softer green background color with higher specificity */
-      color: #fff; /* Button text color */
-      font-family: 'Staatliches', sans-serif;
-      border: none;
-      border-radius: 6px; /* Slightly more rounded corners */
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      width: 125px !important; /* Fixed width */
-      /* Remove max-width to prevent conflicts */
-    }
-
-    #product-component-1733947408877 .shopify-buy__btn:hover {
-      background-color: #388E3C !important; /* Hover effect with a darker green */
-      transform: scale(1.05); /* Slightly enlarge on hover */
-    }
-
     /* Style for the bottom-right image */
     #bottom-right-image {
       position: fixed;
@@ -204,65 +204,42 @@ permalink: /catalog/1
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Optional: add shadow */
     }
 
-    .next-page-button {
-      position: fixed;
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #FFFFFF;
-      padding: 10px 15px;
-      border-radius: 50%;
-      text-decoration: none;
-      font-size: 2em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.3s, transform 0.3s;
-      z-index: 3;
-    }
-
-    .next-page-button:hover {
-      background-color: rgba(0, 0, 0, 8);
-      transform: translateY(-50%) scale(1.1);
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 100px) {
-      .next-page-button {
-        right: 10px;
-        font-size: 1.5em;
-      }
-    }
+    .next-page-button,
     .back-page-button {
       position: fixed;
       top: 50%;
-      left: 20px;
       transform: translateY(-50%);
-      background-color:  rgba(0, 0, 0, 0.5);
-      color: #FFFFFF;
-      padding: 10px 15px;
-      border-radius: 50%;
-      text-decoration: none;
-      font-size: 2em;
+      width: 56px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.3s, transform 0.3s;
+      text-decoration: none;
+      color: #FFFFFF;
+      font-size: 1.5em;
+      line-height: 1;
+      border-radius: 50%;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 12px 32px rgba(0, 0, 0, 0.32),
+        0 2px 6px rgba(0, 0, 0, 0.16);
+      transition: background-color 0.2s ease, transform 0.2s ease;
       z-index: 3;
     }
 
-    .back-page-button:hover {
-      background-color: rgba(0, 0, 0, 8);
-      transform: translateY(-50%) scale(1.1);
-    }
+    .next-page-button { right: 24px; }
+    .back-page-button { left: 24px; }
 
-    /* Responsive Adjustments */
-    @media (max-width: 100px) {
-      .back-page-button {
-        right: 10px;
-        font-size: 1.5em;
-      }
+    .next-page-button:hover,
+    .back-page-button:hover {
+      background-color: rgba(255, 255, 255, 0.14);
+      transform: translateY(-50%) scale(1.06);
     }
     #bottom-right-image.active {
   width: 180px; /* Increased width from 125px to 150px */
@@ -274,22 +251,18 @@ permalink: /catalog/1
 @media (max-width: 768px) {
       /* 1. Adjust Navigation Bar */
       .navigation-bar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        display: flex;
-        flex-wrap: nowrap;
-        padding: 10px 10px;
-        justify-content: flex-end;
-        max-width: 300px;
+        top: 12px;
+        right: 12px;
+        padding: 4px;
+        max-width: none;
         width: auto;
       }
 
       .navigation-bar a {
-        margin: 0 -2px; /* Reduce margin for tighter spacing */
-        font-size: 1em; /* Adjust font size for better fit */
-        padding: 8px 10px; /* Reduce padding for smaller touch targets */
-        display: inline-block;
+        margin: 0;
+        padding: 7px 12px;
+        font-size: 0.85em;
+        display: flex;
       }
 
       /* 2. Adjust Carousel Container */
@@ -395,28 +368,12 @@ permalink: /catalog/1
     font-size: 1em; /* Smaller font for details */
     margin-bottom: 0em; /* Reduce vertical spacing */
   }
-
-  /* Center and Adjust Shopify Buy Button */
-  #product-component-1733950072571 {
-    margin: 10px auto; /* Center horizontally */
-    display: flex;
-    justify-content: center; /* Center button content */
-    align-items: center; /* Align vertically */
-    width: 80%; /* Slightly smaller width to avoid full stretch */
-  }
-
   /* Adjust Next and Back Buttons */
   .next-page-button,
   .back-page-button {
-    font-size: 1em; /* Adjust button size */
-    padding: 10px; /* Adjust padding */
-    width: 20px;
-    height: 20px;
-  }
-
-  .next-page-button::after,
-  .back-page-button::after {
-    font-size: 2em; /* Larger arrow icons */
+    width: 44px;
+    height: 44px;
+    font-size: 1.2em;
   }
 
   .next-page-button {
@@ -440,8 +397,8 @@ permalink: /catalog/1
 
   <!-- Navigation Bar -->
   <nav class="navigation-bar">
+    <a href="/catalog/">Works</a>
     <a href="/about/">About</a>
-    <a href="/catalog/">Catalog</a>
     <a href="/contact/">Contact</a>
   </nav>
 
@@ -466,123 +423,6 @@ permalink: /catalog/1
         <p>Acrylic, Using Pastel, on Canvas</p>
       </div>
       
-      <!-- Shopify Buy Button -->
-      <div id='product-component-1733947408877'></div>
-      <script type="text/javascript">
-      /*<![CDATA[*/
-      (function () {
-        var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-        if (window.ShopifyBuy) {
-          if (window.ShopifyBuy.UI) {
-            ShopifyBuyInit();
-          } else {
-            loadScript();
-          }
-        } else {
-          loadScript();
-        }
-        function loadScript() {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = scriptURL;
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-          script.onload = ShopifyBuyInit;
-        }
-        function ShopifyBuyInit() {
-          var client = ShopifyBuy.buildClient({
-            domain: 'w1r5cz-ag.myshopify.com',
-            storefrontAccessToken: '9c5411478f65c9f7af2f4b8d617eaa0b',
-          });
-          ShopifyBuy.UI.onReady(client).then(function (ui) {
-            ui.createComponent('product', {
-              id: '7941964365961',
-              node: document.getElementById('product-component-1733947408877'),
-              moneyFormat: '%24%7B%7Bamount%7D%7D',
-              options: {
-        "product": {
-          "styles": {
-            "product": {
-              "max-width": "100%", /* Ensure the product container takes full width */
-              "margin-left": "0px", /* Remove left margin */
-              "margin-bottom": "50px" /* Maintain bottom margin */
-            },
-            "button": {
-              "padding-left": "100px", /* Reset padding to avoid conflicts with CSS */
-              "padding-right": "100px",
-              "background-color": "#4CAF50 !important", /* Softer green background color */
-              "color": "#fff", /* Button text color */
-              "font-family": "Staatliches, sans-serif",
-              "border": "none",
-              "border-radius": "6px", /* More rounded corners */
-              ":hover": {
-                "background-color": "#388E3C !important" /* Hover effect with a darker green */
-              }
-            }
-          },
-          "buttonDestination": "checkout",
-          "contents": {
-            "img": false,
-            "title": false,
-            "price": false
-          },
-          "text": {
-            "button": "Buy now"
-          }
-        },
-        "productSet": {
-          "styles": {
-            "products": {
-              "margin-left": "0px" /* Remove negative margin */
-            }
-          }
-        },
-        "modalProduct": {
-          "contents": {
-            "img": false,
-            "imgWithCarousel": true,
-            "button": false,
-            "buttonWithQuantity": true
-          },
-          "styles": {
-            "product": {
-              "max-width": "100%",
-              "margin-left": "0px",
-              "margin-bottom": "0px"
-            },
-            "button": {
-              "padding-left": "0px", /* Reset padding */
-              "padding-right": "0px",
-              "background-color": "#4CAF50 !important",
-              "color": "#fff",
-              "font-family": "Staatliches, sans-serif",
-              "border": "none",
-              "border-radius": "6px",
-              ":hover": {
-                "background-color": "#388E3C !important"
-              }
-            }
-          },
-          "text": {
-            "button": "Add to cart"
-          }
-        },
-        "option": {},
-        "cart": {
-          "text": {
-            "total": "Subtotal",
-            "button": "Checkout"
-          }
-        },
-        "toggle": {}
-      },
-            });
-            // Add 'loaded' class to the Buy Button container to trigger fade-in
-            document.getElementById('product-component-1733947408877').classList.add('loaded');
-          });
-        }
-      })();
-      /*]]>*/
-      </script>
     </div>
   </div>
 
@@ -596,7 +436,7 @@ permalink: /catalog/1
     &#8594;
   </a>
 
-  <a href="/catalog/3" class="back-page-button" aria-label="Back Portfolio Page" title="Back">
+  <a href="/catalog/2" class="back-page-button" aria-label="Back Portfolio Page" title="Back">
     &#8592;
   </a>
 

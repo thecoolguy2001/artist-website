@@ -53,22 +53,48 @@ permalink: /about/
 
     .navigation-bar {
       position: fixed;
-      top: 0;
-      right: 0;
+      top: 16px;
+      right: 16px;
       z-index: 2;
-      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 6px;
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 10px 32px rgba(0, 0, 0, 0.32),
+        0 2px 6px rgba(0, 0, 0, 0.16);
     }
 
     .navigation-bar a {
-      margin: 0 10px;
+      margin: 0;
+      padding: 8px 16px;
+      border-radius: 999px;
       text-decoration: none;
-      color: white;
-      transition: text-decoration 0.3s;
+      color: #fff;
+      font-size: 0.95em;
+      font-family: 'Staatliches', sans-serif;
+      letter-spacing: 0.04em;
       cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .navigation-bar a:hover {
-      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.14);
+      text-decoration: none;
+    }
+
+    .navigation-bar a.active {
+      background-color: rgba(255, 255, 255, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      text-decoration: none;
     }
 
     /* Logo Container */
@@ -106,6 +132,21 @@ permalink: /about/
       margin-right: 5%; /* Adjust the margin to position the text */
       color: #FFFFFF;
       text-align: center;
+
+      /* iOS 26 Liquid Glass panel */
+      box-sizing: border-box;
+      padding: 2.25rem 2.25rem 2.5rem;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 18px 48px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     /* Style for the title */
@@ -191,10 +232,7 @@ permalink: /about/
     }
 
     /* Style for the active navigation link */
-    .navigation-bar a.active {
-      text-decoration: underline;
-    }
-    #bottom-right-image.active {
+#bottom-right-image.active {
   width: 180px; /* Increased width from 125px to 150px */
   bottom: -35px;
   right: -15px;  /* Reduced bottom padding from 10px to 5px */
@@ -206,22 +244,18 @@ permalink: /about/
 @media (max-width: 768px) {
       /* 1. Adjust Navigation Bar */
       .navigation-bar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        display: flex;
-        flex-wrap: nowrap;
-        padding: 10px 10px;
-        justify-content: flex-end;
-        max-width: 300px;
+        top: 12px;
+        right: 12px;
+        padding: 4px;
+        max-width: none;
         width: auto;
       }
 
       .navigation-bar a {
-        margin: 0 -2px; /* Reduce margin for tighter spacing */
-        font-size: 1em; /* Adjust font size for better fit */
-        padding: 8px 10px; /* Reduce padding for smaller touch targets */
-        display: inline-block;
+        margin: 0;
+        padding: 7px 12px;
+        font-size: 0.85em;
+        display: flex;
       }
 
       /* 2. Adjust Carousel Container */
@@ -328,8 +362,8 @@ permalink: /about/
 
   <!-- Navigation Bar -->
   <nav class="navigation-bar">
+    <a href="/catalog/">Works</a>
     <a href="/about/" class="active">About</a>
-    <a href="/catalog/">Catalog</a>
     <a href="/contact/">Contact</a>
   </nav>
 

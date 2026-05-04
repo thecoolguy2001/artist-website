@@ -11,6 +11,34 @@
      
    <!-- Apple Touch Icon -->
    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <!-- 3D asset preload (parallel-fetched during HTML parse for fast model loading) -->
+  <link rel="preload" as="fetch" href="/models/logo.v2.glb" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_baseColor.png" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_metallicRoughness.png" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_perseverance/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_reflection/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_rejoicehewillprovide/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_eternalyouth/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_faith/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_faith/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_faith/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_feelingbloom/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_goodbye/textures/Material.002_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_hell/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_hell/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_hell/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +47,8 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
   <!-- Corrected GLTFLoader script tag -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
-  
+  <script>THREE.Cache.enabled = true;</script>
+
    <style>
     html, body {
       height: 100%;
@@ -50,22 +79,48 @@
 
     .navigation-bar {
       position: fixed;
-      top: 0;
-      right: 0;
+      top: 16px;
+      right: 16px;
       z-index: 2;
-      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 6px;
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 10px 32px rgba(0, 0, 0, 0.32),
+        0 2px 6px rgba(0, 0, 0, 0.16);
     }
 
     .navigation-bar a {
-      margin: 0 10px;
+      margin: 0;
+      padding: 8px 16px;
+      border-radius: 999px;
       text-decoration: none;
-      color: white;
-      transition: text-decoration 0.3s;
+      color: #fff;
+      font-size: 0.95em;
+      font-family: 'Staatliches', sans-serif;
+      letter-spacing: 0.04em;
       cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .navigation-bar a:hover {
-      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.14);
+      text-decoration: none;
+    }
+
+    .navigation-bar a.active {
+      background-color: rgba(255, 255, 255, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      text-decoration: none;
     }
 
     #model-container {
@@ -167,23 +222,18 @@
     @media (max-width: 768px) {
       /* 1. Adjust Navigation Bar */
       .navigation-bar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        display: flex;
-        flex-wrap: nowrap;
-        padding: 10px 10px;
-        justify-content: flex-end;
-        max-width: 300px;
+        top: 12px;
+        right: 12px;
+        padding: 4px;
+        max-width: none;
         width: auto;
-        z-index: 2;
       }
 
       .navigation-bar a {
-        margin: 0 -2px; /* Reduce margin for tighter spacing */
-        font-size: 1em; /* Adjust font size for better fit */
-        padding: 8px 10px; /* Reduce padding for smaller touch targets */
-        display: inline-block;
+        margin: 0;
+        padding: 7px 12px;
+        font-size: 0.85em;
+        display: flex;
       }
       
       /* 2. Adjust Carousel Container */
@@ -259,8 +309,8 @@
       </video>
       <div id="model-container"></div>
       <nav class="navigation-bar">
+        <a href="/catalog/">Works</a>
         <a href="/about/">About</a>
-        <a href="/catalog/">Catalog</a>
         <a href="/contact/">Contact</a>
       </nav>
       <!-- Carousel Container -->
@@ -588,13 +638,29 @@
       
         function animateCarousel() {
           requestAnimationFrame(animateCarousel);
-          
+
+          // Temporarily push the lifted model back to its un-lifted Y for the
+          // hover raycast. Without this the trigger area moves with the model,
+          // and a cursor near the bottom edge oscillates hover on/off.
+          let _liftedY = null;
+          if (hoveredCarouselModel && hoveredCarouselModel.userData.originalY !== undefined) {
+            _liftedY = hoveredCarouselModel.position.y;
+            hoveredCarouselModel.position.y = hoveredCarouselModel.userData.originalY;
+            hoveredCarouselModel.updateMatrixWorld(true);
+          }
+
           // Update the raycaster
           raycasterCarousel.setFromCamera(mouseCarousel, carouselCamera);
-          
+
           // Calculate objects intersecting the picking ray
           const intersects = raycasterCarousel.intersectObjects(carouselGroup.children, true);
-          
+
+          // Restore the lifted position before any hover-state branch reads it.
+          if (_liftedY !== null) {
+            hoveredCarouselModel.position.y = _liftedY;
+            hoveredCarouselModel.updateMatrixWorld(true);
+          }
+
           if (intersects.length > 0) {
             const intersectedObject = intersects[0].object;
             

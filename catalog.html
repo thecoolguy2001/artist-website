@@ -14,6 +14,45 @@ permalink: /catalog/
     
   <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <!-- 3D asset preload (parallel-fetched during HTML parse for fast model loading) -->
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_baseColor.png" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_metallicRoughness.png" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_rejoicehewillprovide/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_reflection/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_perseverance/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_hell/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_hell/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_hell/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_goodbye/textures/Material.002_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_feelingbloom/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_faith/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_faith/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_faith/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_eternalyouth/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_deathofself/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_deathofself/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_deathofself/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_starryknight/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_starryknight/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_starryknight/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_selfportrait/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_selfportrait/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_selfportrait/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_unrequitedlove/scene.gltf" crossorigin="anonymous">
+  <link rel="preload" as="fetch" href="/models/painting_unrequitedlove/scene.bin" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/painting_unrequitedlove/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -21,6 +60,7 @@ permalink: /catalog/
   <script type="module">
     import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
     import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+    THREE.Cache.enabled = true;
     window.THREE = THREE;
     window.GLTFLoader = GLTFLoader;
   </script>
@@ -52,20 +92,30 @@ permalink: /catalog/
   z-index: -1; /* Keeps the video behind other content */
 }
 
-    .navigation-bar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      z-index: 2;
-      padding: 10px;
-    }
-    .navigation-bar a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: white;
-    }
+  .navigation-bar {
+    top: 12px;
+    right: 12px;
+    padding: 4px;
+    max-width: none;
+    width: auto;
+  }
+
+  .navigation-bar a {
+    margin: 0;
+    padding: 7px 12px;
+    font-size: 0.85em;
+    display: flex;
+  }
+
     .navigation-bar a:hover {
-      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.14);
+      text-decoration: none;
+    }
+
+    .navigation-bar a.active {
+      background-color: rgba(255, 255, 255, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      text-decoration: none;
     }
 
     h1 {
@@ -107,9 +157,6 @@ permalink: /catalog/
       height: auto;
     }
     /* Style for the active navigation link */
-.navigation-bar a.active {
-  text-decoration: underline;
-}
 #grid-container canvas {
   transition: cursor 0.2s ease-in-out;
 }
@@ -230,8 +277,8 @@ permalink: /catalog/
   <div id="model-container"></div>
 
   <nav class="navigation-bar">
+    <a href="/catalog/" class="active">Works</a>
     <a href="/about/">About</a>
-    <a href="/catalog/" class="active">Catalog</a>
     <a href="/contact/">Contact</a>
   </nav>
 
@@ -266,6 +313,7 @@ permalink: /catalog/
   <script type="module">
     import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
     import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+    THREE.Cache.enabled = true;
 
     
 
