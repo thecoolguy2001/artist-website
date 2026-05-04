@@ -11,6 +11,14 @@
     
   <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  
+  <!-- Preload the painting model + its textures (parallel during HTML parse) -->
+  <link rel="preload" as="fetch" href="/models/logo.v2.glb" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.gltf" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.bin" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="image" href="/models/painting_reflection/textures/Material.001_baseColor.jpeg" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_baseColor.png" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_metallicRoughness.png" crossorigin="anonymous">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -202,8 +210,6 @@
       justify-content: center;
       text-decoration: none;
       color: #FFFFFF;
-      font-size: 1.5em;
-      line-height: 1;
       border-radius: 50%;
       background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
@@ -218,6 +224,8 @@
       transition: background-color 0.2s ease, transform 0.2s ease;
       z-index: 3;
     }
+    .next-page-button svg,
+    .back-page-button svg { display: block; }
 
     .next-page-button { right: 24px; }
     .back-page-button { left: 24px; }
@@ -376,7 +384,7 @@
       gap: 0.7rem;
       margin-top: 1.5rem;
       width: 100%;
-      justify-content: center;
+      justify-content: flex-start;
     }
     .painting-btn {
       width: 52px;
@@ -537,13 +545,9 @@
 <div id="cd-tooltip" class="tooltip">Radio Off</div>
 
 
-  <a href="/catalog/10" class="next-page-button" aria-label="Next Portfolio Page" title="Next">
-    &#8594;
-  </a>
+  <a href="/catalog/10" class="next-page-button" aria-label="Next Portfolio Page" title="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
 
-  <a href="/catalog/12" class="back-page-button" aria-label="Back Portfolio Page" title="Back">
-    &#8592;
-  </a>
+  <a href="/catalog/12" class="back-page-button" aria-label="Back Portfolio Page" title="Back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       // Check if the user is on a mobile device
