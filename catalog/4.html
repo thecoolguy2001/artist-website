@@ -368,6 +368,111 @@ permalink: /catalog/4
   }
 }
 
+    /* Painting actions — iOS 26 glass pill buttons */
+    .painting-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .painting-btn {
+      flex: 1 1 0;
+      min-width: 130px;
+      max-width: 180px;
+      padding: 0.7rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 8px 18px rgba(0, 0, 0, 0.28);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.92em;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+    .painting-btn:hover {
+      background-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+    .painting-btn:active { transform: translateY(0); }
+
+    /* Full-screen 2D image viewer */
+    .painting-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.85);
+      -webkit-backdrop-filter: blur(40px);
+      backdrop-filter: blur(40px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .painting-modal.open { display: flex; opacity: 1; }
+    .painting-modal__img {
+      max-width: 92vw;
+      max-height: 92vh;
+      border-radius: 12px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+    }
+    .painting-modal__close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.10);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      color: #fff;
+      font-size: 1.5em;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    /* AR view container */
+    model-viewer.painting-ar {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 100;
+      display: none;
+    }
+    model-viewer.painting-ar.open { display: block; }
+    .painting-ar__close {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 101;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(0, 0, 0, 0.45);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      color: #fff;
+      font-size: 1.5em;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+    }
+    .painting-ar__close.open { display: block; }
+
   </style>
 </head>
 <body>
@@ -405,6 +510,10 @@ permalink: /catalog/4
       </div>
       <div class="art-description">
         <p>Acrylic, Using Pastel, on Canvas</p>
+      </div>
+      <div class="painting-actions">
+        <button type="button" class="painting-btn" data-action="view-2d">View as 2D</button>
+        <button type="button" class="painting-btn" data-action="view-ar">View in AR</button>
       </div>
     </div>
   </div>
@@ -904,5 +1013,102 @@ function hideTooltipCD() {
       }
     })();
   </script>
+  <!-- Painting actions: 2D modal + AR viewer -->
+  <div class="painting-modal" id="painting-modal-2d" role="dialog" aria-modal="true" aria-label="2D view">
+    <button type="button" class="painting-modal__close" aria-label="Close">&times;</button>
+    <img class="painting-modal__img" id="painting-modal-img" alt="">
+  </div>
+  <button type="button" class="painting-ar__close" id="painting-ar-close" aria-label="Close AR">&times;</button>
+  <script>
+  (function() {
+    var imgUrl  = '/models/painting_deathofself/textures/Material.001_baseColor.jpeg';
+    var gltfUrl = '/models/painting_deathofself/scene.gltf';
+
+    // ---- 2D view ----
+    var modal = document.getElementById('painting-modal-2d');
+    var modalImg = document.getElementById('painting-modal-img');
+    var modalClose = modal.querySelector('.painting-modal__close');
+    modalImg.src = imgUrl;
+    function openModal() { modal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal() { modal.classList.remove('open'); document.body.style.overflow = ''; }
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        if (modal.classList.contains('open')) closeModal();
+        closeAR();
+      }
+    });
+    document.querySelectorAll('[data-action="view-2d"]').forEach(function(btn) {
+      btn.addEventListener('click', openModal);
+    });
+
+    // ---- AR view (lazy-loads <model-viewer>) ----
+    var arViewer = null;
+    var arClose = document.getElementById('painting-ar-close');
+    var mvLoadPromise = null;
+    function ensureModelViewer() {
+      if (window.customElements && window.customElements.get('model-viewer')) {
+        return Promise.resolve();
+      }
+      if (mvLoadPromise) return mvLoadPromise;
+      mvLoadPromise = new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.type = 'module';
+        s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+        s.onload = function() { customElements.whenDefined('model-viewer').then(resolve); };
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      return mvLoadPromise;
+    }
+    function getOrCreateViewer() {
+      if (arViewer) return arViewer;
+      arViewer = document.createElement('model-viewer');
+      arViewer.id = 'painting-ar';
+      arViewer.className = 'painting-ar';
+      arViewer.setAttribute('ar', '');
+      arViewer.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
+      arViewer.setAttribute('ar-placement', 'wall');
+      arViewer.setAttribute('camera-controls', '');
+      arViewer.setAttribute('touch-action', 'pan-y');
+      arViewer.setAttribute('alt', '');
+      arViewer.src = gltfUrl;
+      document.body.appendChild(arViewer);
+      return arViewer;
+    }
+    function closeAR() {
+      if (!arViewer) return;
+      arViewer.classList.remove('open');
+      arClose.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    arClose.addEventListener('click', closeAR);
+    function viewInAR() {
+      ensureModelViewer().then(function() {
+        var mv = getOrCreateViewer();
+        function tryActivate() {
+          if (mv.canActivateAR) {
+            mv.activateAR();
+          } else {
+            // No AR available — show interactive 3D viewer as fallback.
+            mv.classList.add('open');
+            arClose.classList.add('open');
+            document.body.style.overflow = 'hidden';
+          }
+        }
+        if (mv.loaded) tryActivate();
+        else mv.addEventListener('load', tryActivate, { once: true });
+      }).catch(function(err) {
+        console.error('AR loading failed:', err);
+        alert('AR view is not available right now.');
+      });
+    }
+    document.querySelectorAll('[data-action="view-ar"]').forEach(function(btn) {
+      btn.addEventListener('click', viewInAR);
+    });
+  })();
+  </script>
+
 </body>
 </html>

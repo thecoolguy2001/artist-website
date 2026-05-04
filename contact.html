@@ -100,17 +100,34 @@ permalink: /contact/
       opacity: 1;
     }
   }
-.contact-header {
-  position: relative; /* or absolute, depending on your specific layout */
-  top: -50px; /* Adjust this value to set the exact position you want */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Adjust horizontal centering */
-  z-index: 10; /* Ensure it's above other elements */
-  color: white;
-  animation-name: fadeIn;
-    animation-duration: 1s; /* Adjust the time as needed */
-    animation-fill-mode: both;
-}
+    /* iOS 26 Liquid Glass panel wrapping the entire contact card */
+    .contact-form {
+      position: relative;
+      box-sizing: border-box;
+      width: clamp(320px, 90%, 460px);
+      padding: 2.25rem 2.25rem 2.5rem;
+      border-radius: 28px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 18px 48px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .contact-header {
+      position: static;
+      color: #fff;
+      text-align: center;
+      animation-name: fadeIn;
+      animation-duration: 1s;
+      animation-fill-mode: both;
+    }
 .contact-form h2 {
   text-align: center;
   margin-top: 0.5em; /* Adjust this value to set the header higher as needed */
@@ -284,11 +301,11 @@ permalink: /contact/
     box-sizing: border-box; /* Include padding in element width */
   }
 
-  /* Optional: Adjust the form container for better layout */
+  /* Mobile: keep the glass chrome, adjust sizing/padding only */
   .contact-form {
-    width: 75%; /* Keep the form width manageable on mobile */
-    margin: 10px auto; /* Center and add some vertical spacing */
-    padding: 10px; /* Internal spacing for better readability */
+    width: clamp(280px, 90%, 420px);
+    margin: 10px auto;
+    padding: 1.75rem 1.5rem 2rem;
   }
 
   /* Optional: Reduce submit button padding */

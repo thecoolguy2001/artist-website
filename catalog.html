@@ -415,9 +415,30 @@ permalink: /catalog/
 
     let loadedCount = 0;
     const totalModels = modelPaths.length;
-    group.visible = false; 
+    group.visible = false;
     let animationStarted = false;
     const allModels = [];
+
+    // Kick off the logo load FIRST so the icon appears quickly,
+    // ahead of the 12 heavier grid fetches.
+    const logoLoader = new GLTFLoader();
+    logoLoader.load(
+      '/models/logo.v2.glb',
+      function(gltf) {
+        logoModel = gltf.scene;
+        logoModel.traverse((child)=>{
+          if(child.isMesh) {
+            child.material.side = THREE.DoubleSide;
+            child.material.needsUpdate = true;
+          }
+        });
+        logoScene.add(logoModel);
+      },
+      undefined,
+      function(error){
+        console.error(error);
+      }
+    );
 
     modelPaths.forEach((modelPath, index) => {
       loader.load(
@@ -610,25 +631,6 @@ permalink: /catalog/
     const logoRaycaster = new THREE.Raycaster();
     const logoMouse = new THREE.Vector2();
     let logoModel;
-
-    const logoLoader = new GLTFLoader();
-    logoLoader.load(
-      '/models/logo.v2.glb',
-      function(gltf) {
-        logoModel = gltf.scene;
-        logoModel.traverse((child)=>{
-          if(child.isMesh) {
-            child.material.side = THREE.DoubleSide;
-            child.material.needsUpdate = true;
-          }
-        });
-        logoScene.add(logoModel);
-      },
-      undefined,
-      function(error){
-        console.error(error);
-      }
-    );
 
     logoRenderer.domElement.addEventListener('click', onLogoClickLogo, false);
 
