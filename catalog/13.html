@@ -149,9 +149,14 @@
 
     /* Style for the title */
     .art-title {
-      font-size: 4em;
+      font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+      line-height: 1.1;
       margin-bottom: 0.3em;
       font-weight: bold;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+      max-width: 100%;
     }
 
     /* Style for the details */
