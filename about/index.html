@@ -362,9 +362,24 @@
       height: 100%;
       pointer-events: none;
     }
+    #container3D canvas { display: block; width: 100% !important; height: 100% !important; }
     .text-container { pointer-events: auto; }
     @media (min-width: 769px) {
       .profile-container { justify-content: flex-end; }
+    }
+    @media (max-width: 768px) {
+      /* bio box: bottom-centred, above the CV icon + radio in the corners */
+      .text-container {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 108px;
+        top: auto;
+        width: calc(100% - 32px);
+        max-width: 340px;
+        margin: 0;
+        z-index: 6;
+      }
     }
 
   </style>
