@@ -493,6 +493,75 @@
     }
     model-viewer.painting-ar.open { display: block; }
 
+
+
+    /* === Full-screen model (desktop info box unchanged) === */
+    #container3D {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: visible;
+      pointer-events: auto;        /* keep the model draggable */
+    }
+    .profile-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      justify-content: flex-end;   /* info panel stays on the right */
+      pointer-events: none;        /* let drags fall through to the model */
+    }
+    .text-container { pointer-events: auto; }
+
+    @media (max-width: 768px) {
+      .profile-container { display: block; height: 100%; }
+      .text-container {
+        position: fixed;
+        left: 62px;
+        right: 62px;
+        bottom: 16px;
+        top: auto;
+        margin: 0 auto;
+        width: auto;
+        max-width: 300px;
+        padding: 1.05rem 1.1rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: center;
+      }
+      .art-title { font-size: 1.5em; margin: 0; line-height: 1.15; }
+      .art-details p { font-size: 0.95em; margin: 0; opacity: 0.85; }
+      .art-description p { font-size: 1.05em; margin: 0; }
+      .painting-actions { justify-content: center; gap: 0.8rem; margin: 0.35rem 0 0; }
+      .painting-btn { width: 46px; height: 46px; }
+
+      .next-page-button, .back-page-button {
+        top: auto;
+        bottom: 30px;
+        transform: none;
+        width: 46px;
+        height: 46px;
+      }
+      .back-page-button { left: 10px; }
+      .next-page-button { right: 10px; }
+      .next-page-button:hover, .back-page-button:hover { transform: none; }
+
+      /* lift the radio out of the crowded bottom corner */
+      #radio-widget {
+        top: 14px !important;
+        bottom: auto !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        width: 92px !important;
+        height: 74px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -538,11 +607,7 @@
     </div>
   </div>
 
-  <!-- Bottom Right Image -->
-  <img id="bottom-right-image" src="/assets/cd.png" alt="Description">
   
-  <!-- Tooltip for CD Image -->
-<div id="cd-tooltip" class="tooltip">Radio Off</div>
 
 
   <a href="/catalog/2" class="next-page-button" aria-label="Next Portfolio Page" title="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
@@ -890,144 +955,28 @@ function hideTooltipCD() {
 
 
       // Handle window resizing
-      window.addEventListener("resize", function () {
-        const width = container.clientWidth || window.innerWidth * 0.5;
-        const height = container.clientHeight || window.innerHeight;
-        camera.aspect = width / height;
+            // Full-screen model; keep it left-of-centre on desktop, centred on mobile.
+      function sizeView() {
+        var W = window.innerWidth, H = window.innerHeight;
+        renderer.setSize(W, H);
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          camera.aspect = W / H;
+          if (camera.clearViewOffset) camera.clearViewOffset();
+        } else {
+          var frac = 0.30;                 // model sits ~30% from the left
+          camera.aspect = (2 * W) / H;
+          camera.setViewOffset(2 * W, H, (1 - frac) * W, 0, W, H);
+        }
         camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-      });
+      }
+      window.addEventListener('resize', sizeView);
+      sizeView();
 
       // Start rendering
       animate();
     });
   </script>
-  <script>
-    (function() {
-      // Define the playlist array with your audio file paths
-      const playlist = [
-        '/music/song1.mp3',
-        '/music/song2.mp3',
-        '/music/song3.mp3'
-        // Add more songs as needed
-      ];
-    
-      // Initialize the current track index
-      let currentTrackIndex = 0;
-    
-      // Create the Audio object without setting the source initially
-      const radioAudio = new Audio();
-      radioAudio.src = playlist[currentTrackIndex];
-      radioAudio.loop = false; // No looping individual tracks
-      radioAudio.autoplay = false; // User interaction required to play
-    
-      // Event listener for when a track ends
-      radioAudio.addEventListener('ended', function() {
-        // Select a random track index
-        let nextTrackIndex = Math.floor(Math.random() * playlist.length);
-        
-        // Optional: Prevent the same track from playing consecutively
-        if (playlist.length > 1) { // Ensure there are at least two tracks
-          while (nextTrackIndex === currentTrackIndex) {
-            nextTrackIndex = Math.floor(Math.random() * playlist.length);
-          }
-        }
-        
-        currentTrackIndex = nextTrackIndex; // Update the current track index
-        radioAudio.src = playlist[currentTrackIndex];
-        radioAudio.play().catch(err => {
-          console.error('Error playing next track:', err);
-        });
-      });
-    
-      // Get the CD image and tooltip elements
-      const cdImage = document.getElementById('bottom-right-image');
-      const cdTooltip = document.getElementById('cd-tooltip');
-    
-      if (!cdImage || !cdTooltip) {
-        console.error('CD image or tooltip element not found.');
-        return;
-      }
-    
-      // Debounce flag to prevent rapid toggling
-      let isToggling = false;
-    
-      // Function to toggle radio (playlist) playback
-      function toggleRadio() {
-        if (isToggling) return; // Prevent multiple rapid clicks
-        isToggling = true;
-    
-        if (radioAudio.paused) {
-          radioAudio.play().then(() => {
-            cdImage.src = '/assets/cd.gif'; // Spinning CD animation
-            cdImage.alt = 'Radio On';
-            cdTooltip.textContent = 'Radio On';
-            cdImage.classList.add('active'); // Add the 'active' class
-            isToggling = false; // Reset the flag
-          }).catch(err => {
-            console.error('Playlist play error:', err);
-            isToggling = false; // Reset the flag even on error
-          });
-        } else {
-          radioAudio.pause();
-          cdImage.src = '/assets/cd.png';
-          cdImage.alt = 'Radio Off';
-          cdTooltip.textContent = 'Radio Off';
-          cdImage.classList.remove('active'); // Remove the 'active' class
-          isToggling = false; // Reset the flag
-        }
-      }
   
-      // Attach click event listener to the CD image
-      cdImage.addEventListener('click', toggleRadio);
-    
-      // Initialize tooltip content based on initial state
-      window.addEventListener('DOMContentLoaded', (event) => {
-        cdTooltip.textContent = radioAudio.paused ? 'Radio Off' : 'Radio On';
-      });
-    
-      // Tooltip functionality
-      cdImage.addEventListener('mouseenter', function(event) {
-        cdTooltip.textContent = radioAudio.paused ? 'Radio Off' : 'Radio On';
-        cdTooltip.style.opacity = '1';
-        positionTooltip(event, cdTooltip);
-      });
-    
-      cdImage.addEventListener('mousemove', function(event) {
-        if (cdTooltip.style.opacity === '1') {
-          positionTooltip(event, cdTooltip);
-        }
-      });
-    
-      cdImage.addEventListener('mouseleave', function() {
-        cdTooltip.style.opacity = '0';
-      });
-    
-      // Function to position the tooltip near the cursor
-      function positionTooltip(event, tooltip) {
-        const tooltipWidth = tooltip.offsetWidth;
-        const tooltipHeight = tooltip.offsetHeight;
-        const pageWidth = window.innerWidth;
-        const pageHeight = window.innerHeight;
-    
-        let tooltipX = event.clientX + 10; // 10px to the right
-        let tooltipY = event.clientY - tooltipHeight - 10; // 10px above
-    
-        // Adjust if tooltip goes beyond the right edge
-        if (tooltipX + tooltipWidth > pageWidth) {
-          tooltipX = event.clientX - tooltipWidth - 10;
-        }
-    
-        // Adjust if tooltip goes above the top edge
-        if (tooltipY < 0) {
-          tooltipY = event.clientY + 10;
-        }
-    
-        tooltip.style.left = `${tooltipX}px`;
-        tooltip.style.top = `${tooltipY}px`;
-      }
-    })();
-  </script>
   <!-- Painting actions: 2D modal + AR viewer -->
   <div class="painting-modal" id="painting-modal-2d" role="dialog" aria-modal="true" aria-label="2D view">
     <button type="button" class="painting-modal__close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6 18 18M18 6 6 18"/></svg></button>
@@ -1088,7 +1037,10 @@ function hideTooltipCD() {
       arViewer.setAttribute('camera-controls', '');
       arViewer.setAttribute('touch-action', 'pan-y');
       arViewer.setAttribute('alt', '');
-      arViewer.src = gltfUrl;
+      // Single-file GLB drives Android Scene Viewer + the desktop 3D fallback;
+      // ios-src (USDZ) drives iOS Quick Look. USDZ files are generated separately.
+      arViewer.setAttribute('ios-src', gltfUrl.replace('scene.gltf', 'scene.usdz'));
+      arViewer.src = gltfUrl.replace('scene.gltf', 'scene.glb');
       document.body.appendChild(arViewer);
       return arViewer;
     }
@@ -1125,5 +1077,7 @@ function hideTooltipCD() {
   })();
   </script>
 
+<!-- Shared 3D radio widget -->
+<script src="/assets/radio.js" defer></script>
 </body>
 </html>

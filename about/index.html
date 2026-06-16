@@ -344,7 +344,29 @@
     font-size: 1.2em; /* Reduced from 1.5em to 1.2em */
   }
     }
-   
+
+    /* === Full-screen floating-statue window === */
+    #container3D {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: visible;
+      pointer-events: auto;
+    }
+    .profile-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .text-container { pointer-events: auto; }
+    @media (min-width: 769px) {
+      .profile-container { justify-content: flex-end; }
+    }
+
   </style>
 </head>
 <body>
@@ -385,11 +407,6 @@
     </div>
   </div>
 
-  <!-- Bottom Right Image (CD) -->
-  <img id="bottom-right-image" src="/assets/cd.png" alt="Radio Off">
-
-  <!-- Tooltip for CD Image -->
-  <div id="cd-tooltip" class="tooltip">Radio Off</div>
 
   <!-- Bottom Left Image (CV) -->
   <img id="bottom-left-image" src="/assets/cv.png" alt="View CV">
@@ -578,43 +595,66 @@
       // Instantiate a loader for the .gltf file
       const loader = new THREE.GLTFLoader();
 
-      let object;
+      // Many small copies of the statue floating through 3D depth + space.
+      let meshes = [];            // all clone meshes (for hover cursor)
+      const floaters = [];        // per-instance drift state
+      const STATUE_COUNT = 9;
+      let groupFadeAlpha = 0;
 
-      // Variables for fade-in effect
-      let fadeInAlpha = 0; // Current opacity
-      const fadeInSpeed = 0.05; // Speed of fade-in (adjust as needed)
-      let meshes = []; // Array to cache mesh references
-      let fadeInComplete = false; // Flag to indicate fade-in completion
+      // Pull the camera back so the floating field has room.
+      camera.position.set(0, 0, 7);
 
-      // Load the eye model
       loader.load(
         '/models/Heavenly_Guardians_1213052528_generate.glb',
         function (gltf) {
-          object = gltf.scene;
+          const template = gltf.scene;
 
-          // Traverse the model to set materials for transparency and cache meshes
-          object.traverse(function (child) {
-            if (child.isMesh) {
-              if (child.material) {
-                child.material.transparent = true;
-                child.material.opacity = 0; // Start fully transparent
-                child.material.depthWrite = true; // Ensure depth writing is enabled
-                meshes.push(child); // Cache the mesh for later updates
-              }
-            }
-          });
-
-          // Adjust the model's position and scale
-          object.scale.set(1, 1, 1);
-          object.position.set(0, 0, 0);
-
-          // Center the model
-          const box = new THREE.Box3().setFromObject(object);
+          // Normalise the template so copies scale predictably.
+          const box = new THREE.Box3().setFromObject(template);
+          const size = box.getSize(new THREE.Vector3());
           const center = box.getCenter(new THREE.Vector3());
-          object.position.sub(center);
+          const maxDim = Math.max(size.x, size.y, size.z) || 1;
+          const unit = 1.6 / maxDim;   // base height ~1.6 units
 
-          scene.add(object);
-          console.log('Model loaded:', object);
+          for (let i = 0; i < STATUE_COUNT; i++) {
+            const clone = template.clone(true);
+
+            // Independent, fade-able materials per copy.
+            clone.traverse(function (child) {
+              if (child.isMesh && child.material) {
+                child.material = child.material.clone();
+                child.material.transparent = true;
+                child.material.opacity = 0;
+                meshes.push(child);
+              }
+            });
+
+            // Recentre on its own origin, wrap so we can scale + place freely.
+            clone.position.sub(center);
+            const wrapper = new THREE.Group();
+            wrapper.add(clone);
+            wrapper.scale.setScalar(unit * (0.45 + Math.random() * 0.5));
+
+            // Scatter through width, height and depth.
+            const base = new THREE.Vector3(
+              (Math.random() - 0.5) * 7,
+              (Math.random() - 0.5) * 4.5,
+              (Math.random() - 0.5) * 6 - 1
+            );
+            wrapper.position.copy(base);
+            wrapper.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
+            wrapper.userData.isFloater = true;
+            scene.add(wrapper);
+
+            floaters.push({
+              obj: wrapper,
+              vel: new THREE.Vector3((Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02),
+              spin: new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.012, (Math.random() - 0.5) * 0.008),
+              spd: new THREE.Vector3(0.25 + Math.random() * 0.4, 0.3 + Math.random() * 0.4, 0.2 + Math.random() * 0.35),
+              phase: new THREE.Vector3(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28)
+            });
+          }
+          console.log('Floating statues loaded:', floaters.length);
         },
         undefined,
         function (error) {
@@ -622,38 +662,106 @@
         }
       );
 
+      // Soft bounds — statues bounce gently off invisible walls so a throw
+      // sends them ricocheting around the space instead of flying away.
+      const BOUND = new THREE.Vector3(5.5, 3.2, 4);
+      const BOUND_Z = -1.5;   // centre of the depth box
+
+      let floatTime = 0;
       function animate() {
         requestAnimationFrame(animate);
-
         controls.update();
-        renderer.render(scene, camera);
 
-        // === Fade-In Effect ===
-        if (meshes.length > 0 && !fadeInComplete) {
-          fadeInAlpha += fadeInSpeed; // Increment opacity
+        floatTime += 0.016;
 
-          // Ensure opacity does not exceed 1
-          if (fadeInAlpha >= 1) {
-            fadeInAlpha = 1;
-            fadeInComplete = true; // Mark fade-in as complete
-          }
+        // Fade the whole field in (snappier, matching the rest of the site).
+        if (meshes.length && groupFadeAlpha < 1) {
+          groupFadeAlpha = Math.min(1, groupFadeAlpha + 0.06);
+          meshes.forEach(function (m) { m.material.opacity = groupFadeAlpha; });
+        }
 
-          // Update opacity of all cached meshes
-          meshes.forEach(function (mesh) {
-            mesh.material.opacity = fadeInAlpha;
+        floaters.forEach(function (f) {
+          if (f === dragging) return;            // grabbed one follows the cursor
+
+          // gentle perpetual drift so nothing ever sits perfectly still
+          f.vel.x += Math.sin(floatTime * f.spd.x + f.phase.x) * 0.0006;
+          f.vel.y += Math.sin(floatTime * f.spd.y + f.phase.y) * 0.0006;
+          f.vel.z += Math.sin(floatTime * f.spd.z + f.phase.z) * 0.0006;
+
+          f.obj.position.add(f.vel);
+          f.vel.multiplyScalar(0.985);            // friction settles thrown ones
+
+          ['x', 'y', 'z'].forEach(function (axis) {
+            var c = axis === 'z' ? BOUND_Z : 0;
+            var lim = BOUND[axis];
+            if (f.obj.position[axis] > c + lim) { f.obj.position[axis] = c + lim; f.vel[axis] *= -0.6; }
+            else if (f.obj.position[axis] < c - lim) { f.obj.position[axis] = c - lim; f.vel[axis] *= -0.6; }
           });
 
-          // Once fade-in is complete, reset material properties to opaque
-          if (fadeInComplete) {
-            meshes.forEach(function (mesh) {
-              mesh.material.transparent = false; // Disable transparency
-              mesh.material.opacity = 1; // Ensure full opacity
-              mesh.material.needsUpdate = true; // Inform Three.js to update the material
-            });
-            console.log('Fade-in complete');
-          }
-        }
+          f.obj.rotation.x += f.spin.x;
+          f.obj.rotation.y += f.spin.y;
+          f.obj.rotation.z += f.spin.z;
+        });
+
+        renderer.render(scene, camera);
       }
+
+      // ---- Grab + throw a statue with the mouse -----------------------------
+      const dragRay = new THREE.Raycaster();
+      const dragNDC = new THREE.Vector2();
+      const dragPlane = new THREE.Plane();
+      const dragOffset = new THREE.Vector3();
+      const dragHit = new THREE.Vector3();
+      const camDir = new THREE.Vector3();
+      let dragging = null;
+
+      function ndcFromEvent(e) {
+        const r = renderer.domElement.getBoundingClientRect();
+        dragNDC.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+        dragNDC.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      }
+
+      // Capture phase: grab the statue and stop OrbitControls before it rotates.
+      renderer.domElement.addEventListener('pointerdown', function (e) {
+        ndcFromEvent(e);
+        dragRay.setFromCamera(dragNDC, camera);
+        const hits = dragRay.intersectObjects(meshes, true);
+        if (!hits.length) return;
+        let o = hits[0].object;
+        while (o.parent && !o.userData.isFloater) o = o.parent;
+        const f = floaters.find(function (ff) { return ff.obj === o; });
+        if (!f) return;
+        dragging = f;
+        controls.enabled = false;
+        renderer.domElement.style.cursor = 'grabbing';
+        camera.getWorldDirection(camDir);
+        dragPlane.setFromNormalAndCoplanarPoint(camDir, f.obj.position);
+        dragOffset.set(0, 0, 0);
+        if (dragRay.ray.intersectPlane(dragPlane, dragHit)) dragOffset.copy(f.obj.position).sub(dragHit);
+        f.vel.set(0, 0, 0);
+        try { renderer.domElement.setPointerCapture(e.pointerId); } catch (err) {}
+      }, true);
+
+      renderer.domElement.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        ndcFromEvent(e);
+        dragRay.setFromCamera(dragNDC, camera);
+        if (dragRay.ray.intersectPlane(dragPlane, dragHit)) {
+          const target = dragHit.add(dragOffset);
+          dragging.vel.copy(target).sub(dragging.obj.position);  // throw velocity
+          dragging.obj.position.copy(target);
+        }
+      });
+
+      function endDrag() {
+        if (!dragging) return;
+        if (dragging.vel.length() > 0.6) dragging.vel.setLength(0.6);  // cap the fling
+        dragging = null;
+        controls.enabled = true;
+        renderer.domElement.style.cursor = 'default';
+      }
+      window.addEventListener('pointerup', endDrag);
+      window.addEventListener('pointercancel', endDrag);
 
       // Add event listener for mouse movement over the renderer's DOM element
       renderer.domElement.addEventListener('mousemove', onMouseMove, false);
@@ -877,5 +985,7 @@ radioAudio.addEventListener('ended', function() {
   </script>
   
 
+  <!-- Shared 3D radio widget -->
+  <script src="/assets/radio.js" defer></script>
 </body>
 </html>

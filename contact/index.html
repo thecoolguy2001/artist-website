@@ -345,15 +345,11 @@
   
 
   </div>
-  <!-- Bottom Right Image -->
-  <img id="bottom-right-image" src="/assets/cd.png" alt="Description">
   <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/controls/OrbitControls.js"></script>
 
   <!-- Tooltip for Logo -->
 <div id="logo-tooltip" class="tooltip">Home</div>
 
-<!-- Tooltip for CD Image -->
-<div id="cd-tooltip" class="tooltip">Radio Off</div>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // Check if the user is on a mobile device
@@ -564,81 +560,8 @@
             cdTooltip.style.opacity = '0';
           }
 </script>
-<script>
-  (function() {
-    // Define the playlist array with your audio file paths
-    const playlist = [
-      '/music/song1.mp3',
-      '/music/song2.mp3',
-      '/music/song3.mp3'
-      // Add more songs as needed
-    ];
-  
-    // Initialize the current track index
-    let currentTrackIndex = 0;
-  
-    // Create the Audio object without setting the source initially
-    const radioAudio = new Audio();
-    radioAudio.src = playlist[currentTrackIndex];
-    radioAudio.loop = false; // No looping individual tracks
-    radioAudio.autoplay = false; // User interaction required to play
-  
-    // Event listener for when a track ends
-    radioAudio.addEventListener('ended', function() {
-      // Select a random track index
-      let nextTrackIndex = Math.floor(Math.random() * playlist.length);
-      
-      // Optional: Prevent the same track from playing consecutively
-      if (playlist.length > 1) { // Ensure there are at least two tracks
-        while (nextTrackIndex === currentTrackIndex) {
-          nextTrackIndex = Math.floor(Math.random() * playlist.length);
-        }
-      }
-      
-      currentTrackIndex = nextTrackIndex; // Update the current track index
-      radioAudio.src = playlist[currentTrackIndex];
-      radioAudio.play().catch(err => {
-        console.error('Error playing next track:', err);
-      });
-    });
-  
-    // Get the CD image and tooltip elements
-    const cdImage = document.getElementById('bottom-right-image');
-    const cdTooltip = document.getElementById('cd-tooltip');
-  
-    if (!cdImage || !cdTooltip) {
-      console.error('CD image or tooltip element not found.');
-      return;
-    }
-  
-    // Function to toggle radio (playlist) playback
-    function toggleRadio() {
-      if (radioAudio.paused) {
-        radioAudio.play().then(() => {
-          cdImage.src = '/assets/cd.gif'; // Spinning CD animation
-          cdImage.alt = 'Radio On';
-          cdTooltip.textContent = 'Radio On';
-          cdImage.classList.add('active'); // Add the 'active' class
-        }).catch(err => {
-          console.error('Playlist play error:', err);
-        });
-      } else {
-        radioAudio.pause();
-        cdImage.src = '/assets/cd.png';
-        cdImage.alt = 'Radio Off';
-        cdTooltip.textContent = 'Radio Off';
-        cdImage.classList.remove('active'); // Remove the 'active' class
-      }
-    }
 
-    // Attach click event listener to the CD image
-    cdImage.addEventListener('click', toggleRadio);
-
-    // Optional: Initialize tooltip content based on initial state
-    window.addEventListener('DOMContentLoaded', (event) => {
-      cdTooltip.textContent = radioAudio.paused ? 'Radio Off' : 'Radio On';
-    });
-  })();
-</script>
+<!-- Shared 3D radio widget -->
+<script src="/assets/radio.js" defer></script>
 </body>
 </html>
