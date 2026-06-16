@@ -495,6 +495,7 @@
 
 
 
+
     /* === Full-screen model (desktop info box unchanged) === */
     #container3D {
       position: fixed;
@@ -503,62 +504,67 @@
       height: 100vh;
       z-index: 0;
       overflow: visible;
-      pointer-events: auto;        /* keep the model draggable */
+      pointer-events: auto;
     }
     .profile-container {
       position: relative;
       z-index: 1;
       width: 100%;
       height: 100%;
-      justify-content: flex-end;   /* info panel stays on the right */
-      pointer-events: none;        /* let drags fall through to the model */
+      justify-content: flex-end;
+      pointer-events: none;
     }
     .text-container { pointer-events: auto; }
 
     @media (max-width: 768px) {
       .profile-container { display: block; height: 100%; }
+
+      /* info box: a bottom bar that leaves the bottom-right corner for the radio */
       .text-container {
         position: fixed;
-        left: 62px;
-        right: 62px;
-        bottom: 16px;
+        left: 10px;
+        right: 110px;
+        bottom: 12px;
         top: auto;
-        margin: 0 auto;
+        margin: 0;
         width: auto;
-        max-width: 300px;
-        padding: 1.05rem 1.1rem 1.2rem;
+        max-width: none;
+        padding: 0.85rem 1rem 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
         text-align: center;
       }
-      .art-title { font-size: 1.5em; margin: 0; line-height: 1.15; }
-      .art-details p { font-size: 0.95em; margin: 0; opacity: 0.85; }
-      .art-description p { font-size: 1.05em; margin: 0; }
-      .painting-actions { justify-content: center; gap: 0.8rem; margin: 0.35rem 0 0; }
-      .painting-btn { width: 46px; height: 46px; }
+      .art-title { font-size: 1.3em; margin: 0; line-height: 1.12; }
+      .art-details p { font-size: 0.9em; margin: 0; opacity: 0.85; }
+      .art-description p { font-size: 1em; margin: 0; }
 
-      .next-page-button, .back-page-button {
-        top: auto;
-        bottom: 30px;
-        transform: none;
-        width: 46px;
-        height: 46px;
+      /* arrows live INSIDE the info box, flanking the centred buttons */
+      .painting-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 0.5rem;
+        margin: 0.4rem 0 0;
       }
-      .back-page-button { left: 10px; }
-      .next-page-button { right: 10px; }
+      .painting-btn { width: 46px; height: 46px; }
+      .next-page-button, .back-page-button {
+        position: static;
+        top: auto; left: auto; right: auto; bottom: auto;
+        transform: none;
+        width: 44px; height: 44px;
+        flex: 0 0 auto;
+      }
       .next-page-button:hover, .back-page-button:hover { transform: none; }
 
-      /* lift the radio out of the crowded bottom corner */
+      /* radio: stays in the bottom-right corner, just a touch smaller */
       #radio-widget {
-        top: 14px !important;
-        bottom: auto !important;
-        left: 50% !important;
-        right: auto !important;
-        transform: translateX(-50%) !important;
-        width: 92px !important;
-        height: 74px !important;
+        width: 88px !important;
+        height: 72px !important;
+        right: 12px !important;
+        bottom: 12px !important;
       }
     }
 
@@ -601,8 +607,10 @@
         <p>Acrylic, Using Pastel, on Canvas</p>
       </div>
       <div class="painting-actions">
+        <a href="/catalog/4" class="back-page-button" aria-label="Back Portfolio Page" title="Back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a>
         <button type="button" class="painting-btn" data-action="view-2d" aria-label="View as 2D" title="View as 2D"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="1.7"/><path d="m21 17-5-5-9 9"/></svg></button>
         <button type="button" class="painting-btn" data-action="view-ar" aria-label="View in AR" title="View in AR"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M12 7.5 7.5 10v4L12 16.5 16.5 14v-4Z"/><path d="M12 12v4.5"/><path d="M12 12 7.5 10"/><path d="m12 12 4.5-2"/></svg></button>
+              <a href="/catalog/2" class="next-page-button" aria-label="Next Portfolio Page" title="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
       </div>
     </div>
   </div>
@@ -610,9 +618,7 @@
   
 
 
-  <a href="/catalog/2" class="next-page-button" aria-label="Next Portfolio Page" title="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
 
-  <a href="/catalog/4" class="back-page-button" aria-label="Back Portfolio Page" title="Back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       // Check if the user is on a mobile device
