@@ -22,6 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <style>
+    html { background: #000; }
     html, body {
       height: 100%;
       margin: 0;
@@ -376,6 +377,7 @@
 
 
 
+
     /* === Full-screen model (desktop info box unchanged) === */
     #container3D {
       position: fixed;
@@ -400,22 +402,23 @@
     @media (max-width: 768px) {
       .profile-container { display: block; height: 100%; }
 
-      /* info box: a bottom bar that leaves the bottom-right corner for the radio */
+      /* info box: centred card (matches the About page), above the corner radio */
       .text-container {
         position: fixed;
-        left: 10px;
-        right: 110px;
-        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 100px;
         top: auto;
         margin: 0;
-        width: auto;
-        max-width: none;
-        padding: 0.85rem 1rem 1rem;
+        width: calc(100% - 48px);
+        max-width: 300px;
+        padding: 1.1rem 1.25rem 1.3rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.45rem;
         text-align: center;
+        z-index: 3;
       }
       .art-title { font-size: 1.3em; margin: 0; line-height: 1.12; }
       .art-details p { font-size: 0.9em; margin: 0; opacity: 0.85; }

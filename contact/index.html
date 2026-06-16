@@ -22,6 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <style media="screen">
+    html { background: #000; }
     html, body {
       height: 100%;
       margin: 0;
@@ -210,22 +211,18 @@
 @media (max-width: 768px) {
   /* 1. Adjust Navigation Bar */
   .navigation-bar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    display: flex;
-    flex-wrap: nowrap;
-    padding: 10px 10px;
-    justify-content: flex-end;
-    max-width: 300px;
+    top: 12px;
+    right: 12px;
+    padding: 4px;
+    max-width: none;
     width: auto;
   }
 
   .navigation-bar a {
-    margin: 0 -2px; /* Reduce margin for tighter spacing */
-    font-size: 1em; /* Adjust font size for better fit */
-    padding: 8px 10px; /* Reduce padding for smaller touch targets */
-    display: inline-block;
+    margin: 0;
+    padding: 7px 12px;
+    font-size: 0.85em;
+    display: flex;
   }
 
   /* 2. Adjust Carousel Container */

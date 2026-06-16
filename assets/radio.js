@@ -18,6 +18,30 @@
   if (window.__radioWidgetInit) return;        // guard against double-include
   window.__radioWidgetInit = true;
 
+  // ---- Force the background video to autoplay (runs on every page) ----------
+  // Some browsers block autoplay or leave a play-button overlay; nudge it.
+  (function ensureBgVideo() {
+    function kick() {
+      var v = document.getElementById('background-video');
+      if (!v) return;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.playsInline = true;
+      v.setAttribute('playsinline', '');
+      v.setAttribute('webkit-playsinline', '');
+      v.removeAttribute('controls');
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+    if (document.readyState !== 'loading') kick();
+    else document.addEventListener('DOMContentLoaded', kick);
+    // retry on the first user interaction in case autoplay was blocked
+    var once = { once: true, passive: true };
+    ['touchstart', 'pointerdown', 'click', 'scroll'].forEach(function (ev) {
+      window.addEventListener(ev, kick, once);
+    });
+  })();
+
   if (typeof THREE === 'undefined') {
     console.error('[radio] THREE.js not found — include three.min.js before radio.js');
     return;

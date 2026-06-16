@@ -52,6 +52,7 @@
   <script>THREE.Cache.enabled = true;</script>
 
    <style>
+    html { background: #000; }
     html, body {
       height: 100%;
       margin: 0;
@@ -130,7 +131,7 @@
       top: 5px;
       left: 0;
       z-index: 2;
-  
+      pointer-events: none;   /* let taps/swipes reach the carousel underneath */
     }
 
     #model-container canvas {
