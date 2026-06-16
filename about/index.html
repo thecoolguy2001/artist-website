@@ -13,7 +13,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
   <!-- Include Three.js and GLTFLoader -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
@@ -368,18 +370,22 @@
       .profile-container { justify-content: flex-end; }
     }
     @media (max-width: 768px) {
-      /* bio box: bottom-centred, above the CV icon + radio in the corners */
+      /* bio box: smaller, bottom-centred, above the CV icon + radio in the corners */
       .text-container {
         position: fixed;
         left: 50%;
         transform: translateX(-50%);
-        bottom: 108px;
+        bottom: 104px;
         top: auto;
-        width: calc(100% - 32px);
-        max-width: 340px;
+        width: calc(100% - 56px);
+        max-width: 280px;
         margin: 0;
+        padding: 1.1rem 1.25rem 1.3rem;
         z-index: 6;
       }
+      .art-title { font-size: 2em; margin-bottom: 0.1em; }
+      .art-details p { font-size: 0.9em; }
+      .art-description p { font-size: 1em; margin-top: 0.5em; }
     }
 
   </style>
