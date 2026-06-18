@@ -858,13 +858,25 @@ let fadeInComplete = false; // Flag to indicate fade-in completion
     });
 
     // Adjust the model's position and scale
-    object.scale.set(1, 1, 1);
     object.position.set(0, 0, 0);
+          object.scale.set(1, 1, 1);
 
-    // Center the model
-    const box = new THREE.Box3().setFromObject(object);
-    const center = box.getCenter(new THREE.Vector3());
-    object.position.sub(center);
+          // Normalize to the painting's real-world size so relative sizes are
+          // accurate across the whole catalog (same UNITS_PER_IN on every page).
+          var REAL_MAX_IN = 36;   // longest real-world side of THIS painting (inches)
+          var UNITS_PER_IN = 0.04;        // global constant — identical on every product page
+          var _nbox = new THREE.Box3().setFromObject(object);
+          var _nsize = _nbox.getSize(new THREE.Vector3());
+          var _nmax = Math.max(_nsize.x, _nsize.y, _nsize.z);
+          if (_nmax > 0) {
+            var _nscale = (REAL_MAX_IN * UNITS_PER_IN) / _nmax;
+            object.scale.set(_nscale, _nscale, _nscale);
+          }
+
+          // Center the (now correctly-scaled) model
+          const box = new THREE.Box3().setFromObject(object);
+          const center = box.getCenter(new THREE.Vector3());
+          object.position.sub(center);
 
     scene.add(object);
     console.log('Model loaded:', object);
@@ -992,10 +1004,13 @@ function hideTooltipCD() {
         var W = window.innerWidth, H = window.innerHeight;
         renderer.setSize(W, H);
         if (window.matchMedia('(max-width: 768px)').matches) {
-          var mz = 2.3, mf = 0.30;   // smaller + raised so it sits above the info card
+          // Mobile: pull the camera back (smaller painting, headroom) and raise it
+          // above the info card. No zoom, so real-world relative sizes are preserved.
+          camera.position.set(0, 0, 3.6);
           camera.aspect = W / H;
-          camera.setViewOffset(mz * W, mz * H, mz * W / 2 - 0.5 * W, mz * H / 2 - mf * H, W, H);
+          camera.setViewOffset(W, H, 0, 0.18 * H, W, H);
         } else {
+          camera.position.set(0, 0, 2);
           var frac = 0.30;                 // model sits ~30% from the left
           camera.aspect = (2 * W) / H;
           camera.setViewOffset(2 * W, H, (1 - frac) * W, 0, W, H);
