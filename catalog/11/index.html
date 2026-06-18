@@ -992,7 +992,7 @@ function hideTooltipCD() {
         var W = window.innerWidth, H = window.innerHeight;
         renderer.setSize(W, H);
         if (window.matchMedia('(max-width: 768px)').matches) {
-          var mz = 1.6, mf = 0.30;   // smaller + raised so it sits above the info card
+          var mz = 2.3, mf = 0.30;   // smaller + raised so it sits above the info card
           camera.aspect = W / H;
           camera.setViewOffset(mz * W, mz * H, mz * W / 2 - 0.5 * W, mz * H / 2 - mf * H, W, H);
         } else {
@@ -1085,6 +1085,22 @@ function hideTooltipCD() {
     }
     arClose.addEventListener('click', closeAR);
     function viewInAR() {
+      // iOS: launch AR Quick Look directly with the USDZ. This MUST run
+      // synchronously inside the tap gesture, so we can't wait on model-viewer.
+      var isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS) {
+        var arLink = document.createElement('a');
+        arLink.setAttribute('rel', 'ar');
+        arLink.href = gltfUrl.replace('scene.gltf', 'scene.usdz');
+        var arImg = document.createElement('img');   // Quick Look needs a child element
+        arImg.style.display = 'none';
+        arLink.appendChild(arImg);
+        document.body.appendChild(arLink);
+        arLink.click();
+        setTimeout(function() { arLink.remove(); }, 1500);
+        return;
+      }
       ensureModelViewer().then(function() {
         var mv = getOrCreateViewer();
         function tryActivate() {
@@ -1111,6 +1127,6 @@ function hideTooltipCD() {
   </script>
 
 <!-- Shared 3D radio widget -->
-<script src="/assets/radio.js" defer></script>
+<script src="/assets/radio.js?v=2" defer></script>
 </body>
 </html>

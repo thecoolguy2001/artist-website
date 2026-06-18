@@ -912,7 +912,7 @@
         var W = window.innerWidth, H = window.innerHeight;
         renderer.setSize(W, H);
         if (window.matchMedia('(max-width: 768px)').matches) {
-          var mz = 1.6, mf = 0.30;   // smaller + raised so it sits above the info card
+          var mz = 2.3, mf = 0.30;   // smaller + raised so it sits above the info card
           camera.aspect = W / H;
           camera.setViewOffset(mz * W, mz * H, mz * W / 2 - 0.5 * W, mz * H / 2 - mf * H, W, H);
         } else {
@@ -931,6 +931,6 @@
   </script>
   
 <!-- Shared 3D radio widget -->
-<script src="/assets/radio.js" defer></script>
+<script src="/assets/radio.js?v=2" defer></script>
 </body>
 </html>
