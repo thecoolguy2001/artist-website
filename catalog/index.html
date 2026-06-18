@@ -400,6 +400,31 @@
       return '#';
     }
 
+    // Longest real-world side (inches) per painting, so the grid shows accurate
+    // relative sizes: the biggest piece keeps the current size, smaller pieces
+    // scale down proportionally to real life.
+    const REFERENCE_MAX_IN = 40; // largest painting on the site
+    const REAL_MAX_IN_BY_PATH = {
+      'painting_unrequitedlove': 40,
+      'painting_selfportrait': 20,
+      'painting_starryknight': 30,
+      'painting_deathofself': 40,
+      'painting_eternalyouth': 36,
+      'painting_faith': 40,
+      'painting_feelingbloom': 20,
+      'painting_goodbye': 20,
+      'painting_hell': 40,
+      'painting_perseverance': 20,
+      'painting_reflection': 30,
+      'painting_rejoicehewillprovide': 30,
+    };
+    function getRealMaxIn(modelPath) {
+      for (const key in REAL_MAX_IN_BY_PATH) {
+        if (modelPath.includes(key)) return REAL_MAX_IN_BY_PATH[key];
+      }
+      return REFERENCE_MAX_IN;
+    }
+
     const loader = new GLTFLoader();
     const group = new THREE.Group();
     scene.add(group);
@@ -452,7 +477,10 @@
           box.setFromObject(model);
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scaleFactor = targetMaxDimension / maxDim;
+          // Size relative to real life: biggest painting fills targetMaxDimension,
+          // smaller ones shrink proportionally to their real-world size.
+          const realFrac = getRealMaxIn(modelPath) / REFERENCE_MAX_IN;
+          const scaleFactor = (targetMaxDimension * realFrac) / maxDim;
           model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
           box.setFromObject(model);
