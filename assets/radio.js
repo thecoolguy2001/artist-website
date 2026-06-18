@@ -66,6 +66,7 @@
 
   var current = 0;
   var isOn = false;
+  var announcement = null;   // when set, the screen shows this title (e.g. easter-egg)
 
   var audio = new Audio();
   audio.src = TRACKS[current].src;
@@ -138,7 +139,7 @@
   function resetScroll() { scrollX = SCREEN_W; }
 
   function drawScreen() {
-    var on = isOn;
+    var on = isOn || !!announcement;
     // LCD backing
     sctx.fillStyle = on ? '#0c1f12' : '#0a140d';
     sctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
@@ -164,7 +165,9 @@
     sctx.textAlign = 'left';
 
     // scrolling marquee of the song title
-    var label = on ? ('NOW PLAYING  ' + TRACKS[current].title) : 'RADIO  OFF';
+    var label = announcement
+      ? ('NOW PLAYING  ' + announcement)
+      : (isOn ? ('NOW PLAYING  ' + TRACKS[current].title) : 'RADIO  OFF');
     sctx.font = 'bold 30px "Courier New", monospace';
     var textW = sctx.measureText(label).width;
     var y = 66;
@@ -309,7 +312,7 @@
     requestAnimationFrame(animate);
     baseTime += 0.016;
     if (radio) {
-      if (isOn) {
+      if (isOn || announcement) {
         // playing: the radio actively rocks on its axis + bobs to the beat
         radio.rotation.y = Math.sin(baseTime * 1.7) * 0.45;
         radio.rotation.z = Math.sin(baseTime * 1.3) * 0.07;
@@ -341,6 +344,22 @@
       });
     }
   }
+
+  // ---- Public API (used by the home-page easter egg) -----------------------
+  // announce(): light the screen up as "NOW PLAYING <title>" without using the
+  // radio's own playlist (audio comes from the easter-egg video). clear() reverts.
+  window.RadioWidget = {
+    announce: function (title) {
+      announcement = String(title || '');
+      isOn = false;
+      try { audio.pause(); } catch (e) {}
+      resetScroll();
+    },
+    clear: function () {
+      announcement = null;
+      resetScroll();
+    }
+  };
 
   // ---- Mount (everything above is now defined/assigned) --------------------
   function mount() {

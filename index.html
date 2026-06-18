@@ -949,5 +949,67 @@
             </script>
     <!-- Shared 3D radio widget -->
     <script src="/assets/radio.js" defer></script>
+
+    <!-- Easter egg: on the home page, type "wazzup" -> the sky video crossfades
+         to the Whatzupwitu clip (song baked in), the radio shows it playing,
+         then it fades back when the ~30s clip ends. -->
+    <script>
+    (function () {
+      var SEQ = 'wazzup';
+      var buf = '';
+      var active = false;
+
+      var egg = document.createElement('video');
+      egg.id = 'easter-video';
+      egg.src = '/assets/wazzup.mp4';
+      egg.setAttribute('playsinline', '');
+      egg.playsInline = true;
+      egg.preload = 'none';
+      egg.style.cssText =
+        'position:fixed;top:50%;left:50%;width:100%;height:100%;object-fit:cover;' +
+        'transform:translate(-50%,-50%);z-index:-1;opacity:0;' +
+        'transition:opacity .6s ease;pointer-events:none';
+
+      function addEgg() { document.body.appendChild(egg); }
+      if (document.body) addEgg(); else document.addEventListener('DOMContentLoaded', addEgg);
+
+      // Reveal the clip. Fire on whichever event lands first —
+      // the 'playing' event alone is unreliable, so we also use timeupdate/
+      // canplay plus a short fallback timer.
+      function reveal() {
+        if (!active) return;
+        egg.style.opacity = '1';   // models stay in front (carousel is above this layer)
+      }
+      egg.addEventListener('playing', reveal);
+      egg.addEventListener('timeupdate', reveal);
+      egg.addEventListener('canplay', reveal);
+      egg.addEventListener('loadeddata', reveal);
+
+      function start() {
+        if (active) return;
+        active = true;
+        try { egg.currentTime = 0; } catch (e) {}
+        var p = egg.play();
+        if (p && p.catch) p.catch(function (err) { console.error('wazzup play failed', err); });
+        if (window.RadioWidget) window.RadioWidget.announce('WHATZUPWITU');
+        setTimeout(reveal, 450);   // fallback in case the media events are flaky
+      }
+
+      function stop() {
+        if (!active) return;
+        active = false;
+        egg.style.opacity = '0';
+        if (window.RadioWidget) window.RadioWidget.clear();
+        setTimeout(function () { try { egg.pause(); egg.currentTime = 0; } catch (e) {} }, 700);
+      }
+      egg.addEventListener('ended', stop);
+
+      window.addEventListener('keydown', function (e) {
+        if (active || !e.key || e.key.length !== 1) return;
+        buf = (buf + e.key.toLowerCase()).slice(-SEQ.length);
+        if (buf === SEQ) { buf = ''; start(); }
+      });
+    })();
+    </script>
     </body>
 </html>

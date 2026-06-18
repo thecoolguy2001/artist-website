@@ -522,6 +522,26 @@
     }
     .text-container { pointer-events: auto; }
 
+    /* Desktop: keep arrows + action buttons together inside the card, centred,
+       flowing below the text (no overlap with the painting info) */
+    @media (min-width: 769px) {
+      .next-page-button, .back-page-button {
+        position: static;
+        top: auto; left: auto; right: auto; bottom: auto;
+        transform: none;
+        width: 48px;
+        height: 48px;
+      }
+      .next-page-button:hover, .back-page-button:hover { transform: translateY(-1px); }
+      .painting-actions {
+        position: static;
+        justify-content: center;
+        gap: 0.8rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+
     @media (max-width: 768px) {
       .profile-container { display: block; height: 100%; }
 
@@ -973,8 +993,9 @@ function hideTooltipCD() {
         var W = window.innerWidth, H = window.innerHeight;
         renderer.setSize(W, H);
         if (window.matchMedia('(max-width: 768px)').matches) {
+          var mz = 1.6, mf = 0.30;   // smaller + raised so it sits above the info card
           camera.aspect = W / H;
-          if (camera.clearViewOffset) camera.clearViewOffset();
+          camera.setViewOffset(mz * W, mz * H, mz * W / 2 - 0.5 * W, mz * H / 2 - mf * H, W, H);
         } else {
           var frac = 0.30;                 // model sits ~30% from the left
           camera.aspect = (2 * W) / H;
