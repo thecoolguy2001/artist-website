@@ -865,7 +865,7 @@ let fadeInComplete = false; // Flag to indicate fade-in completion
           // Normalize to the painting's real-world size so relative sizes are
           // accurate across the whole catalog (same UNITS_PER_IN on every page).
           var REAL_MAX_IN = 30;   // longest real-world side of THIS painting (inches)
-          var UNITS_PER_IN = 0.04;        // global constant — identical on every product page
+          var UNITS_PER_IN = 0.028;        // global constant — identical on every product page
           var _nbox = new THREE.Box3().setFromObject(object);
           var _nsize = _nbox.getSize(new THREE.Vector3());
           var _nmax = Math.max(_nsize.x, _nsize.y, _nsize.z);
@@ -1007,9 +1007,9 @@ function hideTooltipCD() {
         if (window.matchMedia('(max-width: 768px)').matches) {
           // Mobile: pull the camera back (smaller painting, headroom) and raise it
           // above the info card. No zoom, so real-world relative sizes are preserved.
-          camera.position.set(0, 0, 3.6);
+          camera.position.set(0, 0, 5.0);
           camera.aspect = W / H;
-          camera.setViewOffset(W, H, 0, 0.18 * H, W, H);
+          camera.setViewOffset(W, H, 0, 0.22 * H, W, H);
         } else {
           camera.position.set(0, 0, 2);
           var frac = 0.30;                 // model sits ~30% from the left
