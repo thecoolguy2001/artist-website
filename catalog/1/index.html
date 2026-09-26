@@ -13,12 +13,12 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   
   <!-- Preload the painting model + its textures (parallel during HTML parse) -->
-  <link rel="preload" as="fetch" href="/models/logo.v2.glb" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" as="fetch" href="/models/logo.v2.glb" crossorigin="anonymous" fetchpriority="low">
   <link rel="preload" as="fetch" href="/models/painting_unrequitedlove/scene.gltf" crossorigin="anonymous" fetchpriority="high">
   <link rel="preload" as="fetch" href="/models/painting_unrequitedlove/scene.bin" crossorigin="anonymous" fetchpriority="high">
   <link rel="preload" as="image" href="/models/painting_unrequitedlove/textures/Material.001_baseColor.jpeg" crossorigin="anonymous" fetchpriority="high">
-  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_baseColor.png" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_metallicRoughness.png" crossorigin="anonymous">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_baseColor.png" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_metallicRoughness.png" crossorigin="anonymous" fetchpriority="low">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -29,8 +29,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pJ6LktzXvKcRFSJ6c4k/Ilj0Dj43EoO5HstBKGs3ayxq5S3lA4ePInLNSxNv6XalXlxIyV0xqYraixF2mgVGQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Include Three.js and GLTFLoader -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <style>
     html, body {
@@ -614,10 +612,13 @@
 <body>
 
   <!-- Background Video -->
-  <video autoplay muted loop playsinline id="background-video">
+  <video autoplay muted loop playsinline webkit-playsinline disablepictureinpicture preload="auto" poster="/assets/video-poster.jpg" id="background-video">
         <source src="/assets/video.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+      <script src="/assets/site-perf.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <!-- Navigation Bar -->
   <nav class="navigation-bar">
@@ -701,9 +702,9 @@
       logoCamera.position.z = 1;
 
       // Create the renderer for the logo
-      const logoRenderer = new THREE.WebGLRenderer({ alpha: true });
+      const logoRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: SITE_AA });
       logoRenderer.setSize(100, 100);
-      logoRenderer.setPixelRatio(window.devicePixelRatio);
+      logoRenderer.setPixelRatio(SITE_DPR);
       document.getElementById('logo-container').appendChild(logoRenderer.domElement);
 
       // Add lights to the logo scene
@@ -827,9 +828,9 @@
       camera.position.set(0, 0, 2);
 
       // Instantiate the renderer
-      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: SITE_AA });
       renderer.setSize(width, height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setPixelRatio(SITE_DPR);
 
       // Append the renderer to the DOM
       container.appendChild(renderer.domElement);

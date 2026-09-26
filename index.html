@@ -74,17 +74,6 @@
       object-fit: cover; /* Ensures the video covers the container without stretching */
       transform: translate(-50%, -50%); /* Centers the video */
       z-index: -1; /* Keeps the video behind other content */
-      pointer-events: none;
-    }
-
-    /* Never show Safari's big play button over the background — if autoplay
-       is blocked the poster frame shows instead until the first touch. */
-    #background-video::-webkit-media-controls,
-    #background-video::-webkit-media-controls-start-playback-button,
-    #background-video::-webkit-media-controls-overlay-play-button {
-      display: none !important;
-      -webkit-appearance: none;
-      opacity: 0 !important;
     }
 
     .navigation-bar {
@@ -315,29 +304,7 @@
         <source src="/assets/video.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
-      <script>
-        // Kick playback immediately; some browsers delay the autoplay attribute
-        // while the main thread is busy compiling/uploading the 3D scene.
-        (function () {
-          var v = document.getElementById('background-video');
-          v.muted = true;
-          function go() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-          go();
-          v.addEventListener('canplay', go, { once: true });
-          // If the browser refused autoplay (e.g. iOS Low Power Mode), start on
-          // the visitor's first touch anywhere — swiping the carousel counts.
-          function onFirstTouch() {
-            if (v.paused) go();
-            ['touchstart', 'pointerdown', 'keydown'].forEach(function (t) {
-              window.removeEventListener(t, onFirstTouch, true);
-            });
-          }
-          ['touchstart', 'pointerdown', 'keydown'].forEach(function (t) {
-            window.addEventListener(t, onFirstTouch, { capture: true, passive: true });
-          });
-          document.addEventListener('visibilitychange', function () { if (!document.hidden) go(); });
-        })();
-      </script>
+      <script src="/assets/site-perf.js"></script>
       <!-- Include Three.js and GLTFLoader -->
       <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
       <!-- Corrected GLTFLoader script tag -->
@@ -378,22 +345,9 @@
       
       // Create the renderer
       // Create the renderer
-      // Weak machines (few cores / little RAM) get fewer pixels to shade.
-      // Resolution is chosen from a pixel budget rather than a flat cap: phones
-      // have small viewports so they can afford ~2x (sharp), while big desktop
-      // windows get scaled down. Core counts are only trusted on desktop —
-      // iOS under-reports them, which would wrongly blur phones.
-      const isTouch = window.matchMedia('(pointer: coarse)').matches;
-      const isLowEnd = !isTouch &&
-        ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4);
-      const PIXEL_BUDGET = isLowEnd ? 1.5e6 : 3.5e6;
-      const MAX_DPR = Math.max(1, Math.min(
-        window.devicePixelRatio || 1,
-        2,
-        Math.sqrt(PIXEL_BUDGET / (window.innerWidth * window.innerHeight))
-      ));
-      // MSAA is cheap on mobile (tile-based) GPUs; skip it on weak desktops.
-      const USE_AA = !isLowEnd;
+      // Render settings (pixel-budget resolution, antialiasing) come from /assets/site-perf.js
+      const MAX_DPR = SITE_DPR;
+      const USE_AA = SITE_AA;
 
       const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: USE_AA, powerPreference: 'high-performance' });
       renderer.setSize(100, 100);

@@ -18,8 +18,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Include Three.js and GLTFLoader -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <style media="screen">
     html, body {
@@ -314,10 +312,13 @@
 </head>
 <body>
 <!-- Video Background -->
-<video autoplay muted loop playsinline id="background-video">
+<video autoplay muted loop playsinline webkit-playsinline disablepictureinpicture preload="auto" poster="/assets/video-poster.jpg" id="background-video">
   <source src="/assets/video.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
+<script src="/assets/site-perf.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
   
   <nav class="navigation-bar">
     <a href="/catalog/">Works</a>
@@ -405,9 +406,9 @@
   const logoCamera = new THREE.PerspectiveCamera(80, 1, 0.1, 1000);
   logoCamera.position.z = 1;
   
-  const logoRenderer = new THREE.WebGLRenderer({ alpha: true });
+  const logoRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: SITE_AA });
   logoRenderer.setSize(100, 100);
-  logoRenderer.setPixelRatio(window.devicePixelRatio);
+  logoRenderer.setPixelRatio(SITE_DPR);
   document.getElementById('logo-container').appendChild(logoRenderer.domElement);
   
   const logoAmbientLight = new THREE.AmbientLight(0xffffff, 0.8);
