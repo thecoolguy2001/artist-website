@@ -11,45 +11,42 @@
      
    <!-- Apple Touch Icon -->
    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-  <!-- 3D asset preload (parallel-fetched during HTML parse for fast model loading) -->
-  <link rel="preload" as="fetch" href="/models/logo.v2.glb" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_baseColor.png" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/_shared/SMS_Canvas_Material_metallicRoughness.png" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_perseverance/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_reflection/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_rejoicehewillprovide/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_eternalyouth/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_faith/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_faith/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_faith/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_feelingbloom/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_goodbye/textures/Material.002_baseColor.jpeg" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_hell/scene.gltf" crossorigin="anonymous">
-  <link rel="preload" as="fetch" href="/models/painting_hell/scene.bin" crossorigin="anonymous">
-  <link rel="preload" as="image" href="/models/painting_hell/textures/Material.001_baseColor.jpeg" crossorigin="anonymous">
+  <!-- Background video + poster first: these must win the bandwidth race -->
+  <link rel="preload" as="image" href="/assets/video-poster.jpg" fetchpriority="high">
+  <!-- 3D assets: low priority so they never starve the background video -->
+  <link rel="preload" as="fetch" href="/models/logo.v2.glb" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/_shared/canvas_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/_shared/canvas_metallicRoughness_512.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_perseverance/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_perseverance/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_reflection/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_reflection/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_rejoicehewillprovide/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_rejoicehewillprovide/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_eternalyouth/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_eternalyouth/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_faith/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_faith/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_faith/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_feelingbloom/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_feelingbloom/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_goodbye/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_goodbye/textures/Material.002_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_hell/scene.1k.gltf" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="fetch" href="/models/painting_hell/scene.bin" crossorigin="anonymous" fetchpriority="low">
+  <link rel="preload" as="image" href="/models/painting_hell/textures/Material.001_baseColor_1k.jpg" crossorigin="anonymous" fetchpriority="low">
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- Include Three.js and GLTFLoader -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
-  <!-- Corrected GLTFLoader script tag -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script>THREE.Cache.enabled = true;</script>
 
    <style>
     html, body {
@@ -303,10 +300,27 @@
     </style>
     </head>
     <body>
-      <video autoplay muted loop playsinline id="background-video">
+      <video autoplay muted loop playsinline preload="auto" poster="/assets/video-poster.jpg" id="background-video">
         <source src="/assets/video.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+      <script>
+        // Kick playback immediately; some browsers delay the autoplay attribute
+        // while the main thread is busy compiling/uploading the 3D scene.
+        (function () {
+          var v = document.getElementById('background-video');
+          v.muted = true;
+          function go() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+          go();
+          v.addEventListener('canplay', go, { once: true });
+          document.addEventListener('visibilitychange', function () { if (!document.hidden) go(); });
+        })();
+      </script>
+      <!-- Include Three.js and GLTFLoader -->
+      <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/build/three.min.js"></script>
+      <!-- Corrected GLTFLoader script tag -->
+      <script src="https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/loaders/GLTFLoader.js"></script>
+      <script>THREE.Cache.enabled = true;</script>
       <div id="model-container"></div>
       <nav class="navigation-bar">
         <a href="/catalog/">Works</a>
@@ -342,9 +356,13 @@
       
       // Create the renderer
       // Create the renderer
-      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      // Weak machines (few cores / little RAM) get fewer pixels to shade.
+      const isLowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+      const MAX_DPR = Math.min(window.devicePixelRatio || 1, isLowEnd ? 1 : 1.5);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, powerPreference: 'high-performance' });
       renderer.setSize(100, 100);
-      renderer.setPixelRatio(window.devicePixelRatio); // Ensure crisp rendering on high-DPI screens
+      renderer.setPixelRatio(MAX_DPR);
       document.getElementById('model-container').appendChild(renderer.domElement);
       // Add lights to the scene
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Soft white light
@@ -465,10 +483,9 @@
       carouselCamera.lookAt(0, 0, 0);
       
       // Instantiate a new renderer for the carousel
-      const carouselRenderer = new THREE.WebGLRenderer({ alpha: true });
+      const carouselRenderer = new THREE.WebGLRenderer({ alpha: true, powerPreference: 'high-performance' });
+      carouselRenderer.setPixelRatio(MAX_DPR);
       carouselRenderer.setSize(carouselContainer.clientWidth, carouselContainer.clientHeight);
-      carouselRenderer.setPixelRatio(window.devicePixelRatio);
-      carouselRenderer.setPixelRatio(window.devicePixelRatio);
       carouselContainer.appendChild(carouselRenderer.domElement);
       
       // Add lights to the carousel scene
@@ -498,17 +515,18 @@
       
       // Event listeners for mouse movement
       carouselRenderer.domElement.addEventListener('mousemove', onCarouselMouseMove, false);
+      carouselRenderer.domElement.addEventListener('mouseleave', function () { mouseCarousel.set(9999, 9999); }, false);
       
       // Array of model paths to use in the carousel
       const models = [
-        '/models/painting_perseverance/scene.gltf', //Third
-      '/models/painting_reflection/scene.gltf', //Second
-      '/models/painting_rejoicehewillprovide/scene.gltf', //First
-      '/models/painting_eternalyouth/scene.gltf', //Eigth
-      '/models/painting_faith/scene.gltf', //Seventh
-      '/models/painting_feelingbloom/scene.gltf', //Sixth
-      '/models/painting_goodbye/scene.gltf', //Fifth
-      '/models/painting_hell/scene.gltf',//Fourth
+        '/models/painting_perseverance/scene.1k.gltf', //Third
+      '/models/painting_reflection/scene.1k.gltf', //Second
+      '/models/painting_rejoicehewillprovide/scene.1k.gltf', //First
+      '/models/painting_eternalyouth/scene.1k.gltf', //Eigth
+      '/models/painting_faith/scene.1k.gltf', //Seventh
+      '/models/painting_feelingbloom/scene.1k.gltf', //Sixth
+      '/models/painting_goodbye/scene.1k.gltf', //Fifth
+      '/models/painting_hell/scene.1k.gltf',//Fourth
         // Add more model paths as needed
         ];
         
@@ -645,11 +663,12 @@
             hoveredCarouselModel.updateMatrixWorld(true);
           }
 
-          // Update the raycaster
-          raycasterCarousel.setFromCamera(mouseCarousel, carouselCamera);
-
-          // Calculate objects intersecting the picking ray
-          const intersects = raycasterCarousel.intersectObjects(carouselGroup.children, true);
+          // Only raycast while the pointer is over the carousel
+          let intersects = [];
+          if (mouseCarousel.x !== 9999) {
+            raycasterCarousel.setFromCamera(mouseCarousel, carouselCamera);
+            intersects = raycasterCarousel.intersectObjects(carouselGroup.children, true);
+          }
 
           // Restore the lifted position before any hover-state branch reads it.
           if (_liftedY !== null) {
